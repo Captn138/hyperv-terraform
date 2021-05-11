@@ -8,16 +8,17 @@ terraform {
 }
 
 provider "hyperv" {
-  user     = var.provider.user
-  password = var.provider.password
-  host     = var.provider.ip
-  port     = var.provider.port
+  user     = var.hvprovider.user
+  password = var.hvprovider.password
+  host     = var.hvprovider.ip
+  port     = var.hvprovider.port
 }
 
 resource "hyperv_machine_instance" "my_machine" {
   name                 = var.machine.name
   processor_count      = var.machine.processor
-  memory_startup_bytes = var.machine.memory
+  static_memory        = true
+  memory_startup_bytes = var.machine.memory_gb * 1073741824
   notes                = var.machine.notes
   dvd_drives {
     controller_number   = 0
@@ -37,9 +38,9 @@ resource "hyperv_machine_instance" "my_machine" {
 }
 
 resource "hyperv_vhd" "my_machine_vhd" {
-  path     = "$(var.vhdx.path)${local.machine_name}.vhdx"
+  path     = "${var.vhdx.path}${var.machine.name}.vhdx"
   vhd_type = "Dynamic"
-  size     = var.vhdx.size
+  size     = var.vhdx.size_gb * 1000000000
 }
 
 data "hyperv_network_switch" "default_switch" {

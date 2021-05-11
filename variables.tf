@@ -1,4 +1,4 @@
-variable "provider" {
+variable "hvprovider" {
   type = object({
     user     = string
     password = string
@@ -14,16 +14,16 @@ variable "provider" {
 }
 
 variable "machine" {
-  type = objetc({
+  type = object({
     name      = string
     processor = number
-    memory    = number
+    memory_gb = number
     notes     = string
   })
   default = {
     name      = "my_awesome_machine"
     processor = 4
-    memory    = 4294967296
+    memory_gb = 4
     notes     = "this is a superb test"
   }
   description = "The virtual machine to be created"
@@ -37,12 +37,12 @@ variable "iso_path" {
 
 variable "vhdx" {
   type = object({
-    path = string
-    size = number
+    path    = string
+    size_gb = number
   })
   default = {
-    path = "C:\\Virtual Machines\\"
-    size = 25000000000
+    path    = "C:\\Virtual Machines\\"
+    size_gb = 25
   }
   description = "Vhdx file to be created for the virtual machine"
 }
