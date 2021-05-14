@@ -1,6 +1,25 @@
 # hyperv-terraform
 Deploying a HyperV VM, with a Windows Server 2019, with a custom ISO
 
+Table of Contents
+=================
+
+* [hyperv-terraform](#hyperv-terraform)
+   * [Prerequisite](#prerequisite)
+      * [Execution policy and Hyper-V](#execution-policy-and-hyper-v)
+      * [Windows Server 2019 stock ISO](#windows-server-2019-stock-iso)
+      * [Terraform software](#terraform-software)
+      * [MSMG Toolkit](#msmg-toolkit)
+      * [Windows Assessment and Deployment Kit](#windows-assessment-and-deployment-kit)
+   * [Customize](#customize)
+      * [Customize ISO](#customize-iso)
+         * [Auto Unattended XML file](#auto-unattended-xml-file)
+         * [Setup Complete CMD script](#setup-complete-cmd-script)
+         * [Building the new ISO](#building-the-new-iso)
+      * [Customize Terrfaorm variables](#customize-terrfaorm-variables)
+   * [Deploy](#deploy)
+   * [Destroy](#destroy)
+
 ## Prerequisite
 
 ### Execution policy and Hyper-V
