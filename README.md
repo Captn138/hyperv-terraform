@@ -58,7 +58,7 @@ choco install Terraform -y
 
 ### MSMG Toolkit
 You can download it from here : https://www.majorgeeks.com/files/details/msmg_toolkit.html  
-Direct download link : TBA  
+Direct download link : https://files1.majorgeeks.com/4212a627b63c7a752e9d10e32b0abf9c84db8744/allinone/Toolkit_v11.4.7z  
 Extract it using 7zip.
 
 ### Windows Assessment and Deployment Kit
