@@ -54,11 +54,7 @@ variable "network" {
   })
   default = {
     name        = "wan"
-    switch_name = "Default Switch"
+    switch_name = "VM"
   }
   description = "Network card to be used by the virtual machine"
 }
-
-// output "instance_name" {
-//   value = hyperv_machine_instance.my_machine.name
-// }

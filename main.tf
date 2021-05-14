@@ -43,6 +43,8 @@ resource "hyperv_vhd" "my_machine_vhd" {
   size     = var.vhdx.size_gb * 1000000000
 }
 
-data "hyperv_network_switch" "default_switch" {
+data "hyperv_network_switch" "default_switch" { //resource
   name = var.network.switch_name
+  // switch_type = "External"
+  // net_adapter_names = ["Wi-Fi"]
 }
