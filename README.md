@@ -1,8 +1,7 @@
 # hyperv-terraform
 Deploying a HyperV VM, with a Windows Server 2019, with a custom ISO
 
-Table of Contents
-=================
+## Table of Contents
 
 * [hyperv-terraform](#hyperv-terraform)
    * [Prerequisite](#prerequisite)
