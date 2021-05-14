@@ -51,10 +51,14 @@ variable "network" {
   type = object({
     name        = string
     switch_name = string
+    switch_type = string
+    net_adapter_names = list(string)
   })
   default = {
     name        = "wan"
     switch_name = "VM"
+    switch_type = "External"
+    net_adapter_names = ["Ethernet"]
   }
   description = "Network card to be used by the virtual machine"
 }
