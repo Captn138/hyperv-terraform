@@ -3,21 +3,21 @@ Deploying a HyperV VM, with a Windows Server 2019, with a custom ISO
 
 ## Table of Contents
 
-* [hyperv-terraform](#hyperv-terraform)
-   * [Prerequisite](#prerequisite)
-      * [Execution policy and Hyper-V](#execution-policy-and-hyper-v)
-      * [Windows Server 2019 stock ISO](#windows-server-2019-stock-iso)
-      * [Terraform software](#terraform-software)
-      * [MSMG Toolkit](#msmg-toolkit)
-      * [Windows Assessment and Deployment Kit](#windows-assessment-and-deployment-kit)
-   * [Customize](#customize)
-      * [Customize ISO](#customize-iso)
-         * [Auto Unattended XML file](#auto-unattended-xml-file)
-         * [Setup Complete CMD script](#setup-complete-cmd-script)
-         * [Building the new ISO](#building-the-new-iso)
-      * [Customize Terrfaorm variables](#customize-terrfaorm-variables)
-   * [Deploy](#deploy)
-   * [Destroy](#destroy)
+* [Prerequisite](#prerequisite)
+   * [Execution policy and Hyper-V](#execution-policy-and-hyper-v)
+   * [Windows Server 2019 stock ISO](#windows-server-2019-stock-iso)
+   * [Terraform software](#terraform-software)
+   * [MSMG Toolkit](#msmg-toolkit)
+   * [Windows Assessment and Deployment Kit](#windows-assessment-and-deployment-kit)
+* [Customize](#customize)
+   * [Customize ISO](#customize-iso)
+      * [Auto Unattended XML file](#auto-unattended-xml-file)
+      * [Setup Complete CMD script](#setup-complete-cmd-script)
+      * [Skip user input on boot time](#skip-user-input-on-boot-time)
+      * [Building the new ISO](#building-the-new-iso)
+   * [Customize Terrfaorm variables](#customize-terrfaorm-variables)
+* [Deploy](#deploy)
+* [Destroy](#destroy)
 
 ## Prerequisite
 
@@ -58,7 +58,6 @@ choco install Terraform -y
 
 ### MSMG Toolkit
 You can download it from here : https://www.majorgeeks.com/files/details/msmg_toolkit.html  
-Direct download link : https://files1.majorgeeks.com/4212a627b63c7a752e9d10e32b0abf9c84db8744/allinone/Toolkit_v11.4.7z  
 Extract it using 7zip.
 
 ### Windows Assessment and Deployment Kit
@@ -69,16 +68,17 @@ Execute `adksetup.exe` and unselect everything unless `Deployment tools`. Instal
 ## Customize
 ### Customize ISO
 #### Auto Unattended XML file
-An Auto Unattended XML files allows installing Windows with predefined values. In my case, I wanted a fully automated installation of Windows, as well as some custom predefined values.  
-1. Place your ISO file in the ISO folder in MSMG Toolkit folder.
-2. Launch `Start.cmd` in the MSMGT folder (Administrator privileges required).
+An Auto Unattended XML file allows installing Windows with predefined values. In my case, I wanted a fully automated installation of Windows, as well as some custom predefined values.  
+1. Place your ISO file in the `ISO` folder in MSMG Toolkit folder.
+2. Execute `Start.cmd` in the MSMGT folder (Administrator privileges required).
 3. Accept the EULA by pressing `A`.
 4. Extract the ISO file : Go to `Source > Extract source from DVD ISO Image` by typing `1 3` and type in the name of your ISO file.
-5. You can close MSMGT by typing `X`. Open your startup menu, scroll to `Windows Kits` and open `Windows System Image Manager` (`Assistant Gestion d'Installation`).
-6. Click on `File > Select Windows Image`, navigate to `MSMGT > DVD > sources > install.wim`. Select your version of Windows to install. It will ask to build a catalog. Accept (it is a long process).
+5. You can close MSMGT by typing `X`. Open your startup menu, scroll to `Windows Kits` and open `Windows System Image Manager`.
+6. Click on `File > Select Windows Image`, navigate to `MSMGT > DVD > sources > install.wim`. Select your version of Windows to customize. It will ask to build a catalog. Accept (it is a long process, Administrator privileges required).
 7. Click on `File > New response file`.
-8. Customize your response file. You can find mine in this git repo or you can check some documentation here : https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/automate-windows-setup or https://www.windowscentral.com/how-create-unattended-media-do-automated-installation-windows-10 .
-9. Save your response file as `autounattend.xml` and place it in `MSMGT > DVD`
+8. Customize your response file. You can find mine in this git repo (Administrator's password : `p@ssword1234`) or you can check some documentation here : https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/automate-windows-setup or https://www.windowscentral.com/how-create-unattended-media-do-automated-installation-windows-10 .
+9. Save your response file as `autounattend.xml` and place it in `MSMGT > DVD`.
+10. Close the Windows system image manager and delete the `MSMGT > DVD > sources > Install_Windows XXX.clg` file, or move it elsewhere to avoid rebuilding it.
 
 #### Setup Complete CMD script
 1. Navigate to `MSMG > DVD > sources`.
@@ -92,6 +92,9 @@ rd /q /s "%WINDIR%\Setup\Files"
 del /q /f "%0"
 ```
 5. Replace the second line by your custom cmd commands. I suggest creating a PowerShell script file in the `Files` folder and calling it using `powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass "%WINDIR%\Setup\Files\myscript.ps1"`. I have added my `post.ps1` script in this git repo. It automatically creates an AD forest and domain controller, as well as fixing the IP address. I strongly advise you to only use this file as an example, as I use custom values for an IP network and AD forest.
+
+#### Skip user input on boot time
+By default, when we boot on the Windows ISO image, we will be asked to `Press any key to boot from CD or DVD`. We can skip that by going to `MSMGT > DVD > efi > microsoft > boot` and delete `efisys.bin` and `cdboot.bin`, then rename both their counterparts (`efisys_noprompt.bin` and `cdboot_noprompt.bin`) as the files we just deleted.
 
 #### Building the new ISO
 1. Open MSMGT : `MSMGT > Start.cmd` (Administrator privileges required).
